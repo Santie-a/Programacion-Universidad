@@ -1,8 +1,11 @@
 def get_input():
-    # Estructura 'While True' con 'try - except' para no continuar el programa hasta que los valores introducidos sean válidos
+    """
+    Función para obtener valores de usuario.
+    Usa una estructura 'While True' con 'try - except' para no continuar el programa hasta que los valores introducidos sean válidos.
+    """
     while True:
         try:
-            annual_salary = float(input("Introduzca su salario anual: "))
+            annual_salary = float(input("Introduzca su salario mensual: ")) * 12
             sem_annual_raise = float(input("Introduzca el porcentaje de aumento semestral en su salario, en decimal: "))
             total_cost = float(input("Introduzca el valor de su casa soñada: "))
             months_to_save = int(input("Introduzca el número de meses que tiene como objetivo para comprar la casa: "))
@@ -14,7 +17,10 @@ def get_input():
 
     return annual_salary, sem_annual_raise, total_cost, months_to_save
 
-def get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost):    
+def get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost):
+    """
+    Función para determinar los meses necesarios para pagar una cuota inicial del 25% del costo total, teniendo en cuenta que se tiene un incremento semestral del salario.
+    """  
     # Declaración de variables y cálculos iniciales
     portion_down_payment = total_cost * 0.25
     current_savings = 0
@@ -32,16 +38,56 @@ def get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, 
     return months_before_portion
         
 def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_to_save):
-    lower = 0
+    """
+    Función que retorna la mejor taza de ahorro para pagar la una cuota del 25% del costo total, basado en el salario, incremento mensual y los meses presupuestados para el ahorro. 
+    """
+    # Inicialización de variables para el bucle 
+    low = 0
     high = 1
+
+    # Variable para contablizar el número de iteraciones necesarias para encontrar la taza
+    steps = 0
+
+    # Bucle para determinar la mejor taza de ahorro
     while True:
-        portion_saved = (high - lower) / 2
+        # Taza de prueba basado en los 2 límites (inicia en 0.5 - 50%)
+        portion_saved = round((high + low) / 2, 4)
+
+        # Meses para el pago inicial basado en la taza de prueba
         months = get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost)
-        if months > months_to_save:
-            high /= 2
+
+        # Si los meses necesarios son menores que los pesupuestados, se puede encontrar una taza más baja
+        if months < months_to_save:
+            high = portion_saved
+            steps += 1
         
-        break # Falta añadir la logica para encontrar la mejor taza de ahorro
+        # Si los meses necesarios son mayores que los presupuestados, se nececita una taza más alta
+        elif months > months_to_save:
+            low = portion_saved
+            steps += 1
+
+        # Se rompe el bucle cuando los meses necesarios con la taza encontrada son los mismos que los meses presupuestados
+        elif months == months_to_save:
+            break
+
+        # Caso especial donde los meses necesarios son siempre mayores a los presupuestados, con lo cual se retorna None para condición el el programa principal
+        if low == 1.0:
+            return None, None
     
+    return portion_saved, steps
+
+# Programa principal    
 if __name__ == "__main__":
+    # Asignación de variables
     annual_salary, sem_annual_raise, total_cost, months_to_save = get_input()
-    best_portion_saved = get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_to_save)
+
+    # Encontrar la mejor taza de ahorros basada en los datos asignados
+    best_portion_saved, steps = get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_to_save)
+
+    # Verificar si existe una taza de ahorro
+    if best_portion_saved is not None:
+        print(f"Se encontró la mejor taza de ahorro para {months_to_save / 12} años: {best_portion_saved}, en {steps} pasos.")
+    
+    # De lo contrario indicar que no se encontró
+    else:
+        print(f"No es posible pagar la cuota inicial en {months_to_save / 12} años.")
