@@ -1,3 +1,7 @@
+# Santiago Díaz Obando, TI 1028481987
+
+# Programa para calcular la mejor taza de ahorro para 36 meses para para pagar la una cuota inicial de 25% de una casa de 1M, teniendo en cuenta inversiones de 4% anual y un incremento del 7% semestral
+
 def get_input():
     """
     Función para obtener valores de usuario.
@@ -52,6 +56,7 @@ def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_t
 
         # Meses para el pago inicial basado en la taza de prueba
         months = get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost)
+
         # Si los meses necesarios son menores que los pesupuestados, se puede encontrar una taza más baja
         if months < months_to_save:
             high = portion_saved
@@ -65,7 +70,8 @@ def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_t
         # Se rompe el bucle cuando los meses necesarios con la taza encontrada son los mismos que los meses presupuestados
         elif months == months_to_save:
             break
-
+        
+        # Caso especial
         if months == 1:
             return 0, 0
 
@@ -87,9 +93,9 @@ if __name__ == "__main__":
     if best_portion_saved:
         print(f"Se encontró la mejor taza de ahorro mensual para {int(months_to_save / 12)} años: {best_portion_saved}, en {steps} pasos.")
     
-    # Es posible pagar en un solo mes
+    # El salario es demasiado alto para el calculo
     elif best_portion_saved == 0:
-        print("La cuota inicial se puede pagar en un solo mes")
+        print("El salario es demasiado alto! Seguramente se puede pagar la cuota inicial en un mes.")
 
     # De lo contrario indicar que no se encontró
     else:
