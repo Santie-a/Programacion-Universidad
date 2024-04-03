@@ -19,12 +19,12 @@ long int get_input() {
     	// Validar la entrada
     	bool valid = true;
     	for (char c : input)
+	{
+		if (!isdigit(c))
 		{
-      		if (!isdigit(c))
-			{
         		valid = false;
         		break;
-      		}
+		}
     	}	
 
     	if (valid)
