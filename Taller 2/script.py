@@ -5,17 +5,14 @@ def get_input():
     """
     while True:
         try:
-            annual_salary = float(input("Introduzca su salario mensual: ")) * 12
-            sem_annual_raise = float(input("Introduzca el porcentaje de aumento semestral en su salario, en decimal: "))
-            total_cost = float(input("Introduzca el valor de su casa soñada: "))
-            months_to_save = int(input("Introduzca el número de meses que tiene como objetivo para comprar la casa: "))
-            if annual_salary > 0 and sem_annual_raise > 0 and total_cost > 0 and months_to_save > 0:
+            annual_salary = float(input("Introduzca su salario inicial: "))
+            if annual_salary > 0:
                 break
             print("Los datos introducidos no son válidos!")
         except Exception as e:
             print("Introduce un valor válido!", e)
 
-    return annual_salary, sem_annual_raise, total_cost, months_to_save
+    return annual_salary
 
 def get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost):
     """
@@ -55,7 +52,6 @@ def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_t
 
         # Meses para el pago inicial basado en la taza de prueba
         months = get_months_for_part_payment(annual_salary, sem_annual_raise, portion_saved, total_cost)
-
         # Si los meses necesarios son menores que los pesupuestados, se puede encontrar una taza más baja
         if months < months_to_save:
             high = portion_saved
@@ -70,6 +66,9 @@ def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_t
         elif months == months_to_save:
             break
 
+        if months == 1:
+            return 0, 0
+
         # Caso especial donde los meses necesarios son siempre mayores a los presupuestados, con lo cual se retorna None para condición el el programa principal
         if low == 1.0:
             return None, None
@@ -78,16 +77,20 @@ def get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_t
 
 # Programa principal    
 if __name__ == "__main__":
-    # Asignación de variables
-    annual_salary, sem_annual_raise, total_cost, months_to_save = get_input()
+    # Asignación de variables, asumiendo 7% de incremento semestral, 1M de costo de la casa y 36 meses para ahorrar
+    annual_salary, sem_annual_raise, total_cost, months_to_save = get_input(), 0.07, 1000000, 36
 
     # Encontrar la mejor taza de ahorros basada en los datos asignados
     best_portion_saved, steps = get_best_portion_saved(annual_salary, sem_annual_raise, total_cost, months_to_save)
 
     # Verificar si existe una taza de ahorro
-    if best_portion_saved is not None:
-        print(f"Se encontró la mejor taza de ahorro para {months_to_save / 12} años: {best_portion_saved}, en {steps} pasos.")
+    if best_portion_saved:
+        print(f"Se encontró la mejor taza de ahorro mensual para {int(months_to_save / 12)} años: {best_portion_saved}, en {steps} pasos.")
     
+    # Es posible pagar en un solo mes
+    elif best_portion_saved == 0:
+        print("La cuota inicial se puede pagar en un solo mes")
+
     # De lo contrario indicar que no se encontró
     else:
-        print(f"No es posible pagar la cuota inicial en {months_to_save / 12} años.")
+        print(f"No es posible pagar la cuota inicial en {int(months_to_save / 12)} años.")
