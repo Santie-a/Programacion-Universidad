@@ -10,33 +10,35 @@ using namespace std;
 
 
 // Función para obtener entrada correcta del usuario sin terminar el programa (La entrada tiene que ser mayor que 11, ya que entre 1 y 11  no avanza el programa).
-long int get_input() {
-  	std::string input;
- 	while (true) {
-    	cout << "Introduzca su salario inicial: ";
-    	getline(cin, input);
-
-    	// Validar la entrada
-    	bool valid = true;
-    	for (char c : input)
+long int get_input()
+{
+  	string input;
+ 	while (true)
 	{
-		if (!isdigit(c))
+	    	cout << "Introduzca su salario inicial: ";
+	    	getline(cin, input);
+	
+	    	// Validar la entrada
+	    	bool valid = true;
+	    	for (char c : input)
 		{
-        		valid = false;
-        		break;
-		}
-    	}	
-
-    	if (valid)
-		{
-      		long int annual_salary = stol(input, nullptr, 0);
-      		if (annual_salary > 11)
-		{
-        		return annual_salary;
-      		}
-    	}
-
-    	std::cout << "Entrada no válida. Inténtalo de nuevo." << std::endl;
+			if (!isdigit(c))
+			{
+	        		valid = false;
+	        		break;
+			}
+	    	}	
+	
+	    	if (valid)
+			{
+	      		long int annual_salary = stol(input, nullptr, 0);
+	      		if (annual_salary > 11)
+			{
+	        		return annual_salary;
+	      		}
+	    	}
+	
+	    	std::cout << "Entrada no válida. Inténtalo de nuevo." << std::endl;
 	}
 }
 
