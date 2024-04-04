@@ -31,7 +31,7 @@ long int get_input() {
 		{
       		long int annual_salary = stol(input, nullptr, 0);
       		if (annual_salary > 11)
-			{
+		{
         		return annual_salary;
       		}
     	}
