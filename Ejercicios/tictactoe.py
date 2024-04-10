@@ -86,12 +86,14 @@ def main():
             print("Draw")
             if input("Quieres jugar otra vez?: s/n: ").lower().startswith("n"):
                 return
-    
+            main()
+
     winner, winner_char = is_winner(board)
     if winner:
         print(f"Ganan las {winner_char}'s")
         if input("Quieres jugar otra vez?: s/n: ").lower().startswith("n"):
             return
+        main()
             
 if __name__ == "__main__":
     main()
